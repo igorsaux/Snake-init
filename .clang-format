@@ -1,0 +1,12 @@
+BasedOnStyle: LLVM
+IndentWidth: 4
+Language: Cpp
+ColumnLimit: 120
+AlignConsecutiveAssignments: Consecutive
+AlignConsecutiveDeclarations: Consecutive
+AlignConsecutiveMacros: Consecutive
+AlignConsecutiveBitFields: Consecutive
+AlignConsecutiveShortCaseStatements: {
+  Enabled: true
+}
+PointerAlignment: Left
