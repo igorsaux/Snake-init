@@ -12,3 +12,5 @@ void SNK_crash(const char* msg, ...);
 bool SNK_exists(const char* path);
 
 bool SNK_isDir(const char* path);
+
+void SNK_switchConsoleTo(const char* path);

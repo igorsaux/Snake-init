@@ -102,6 +102,7 @@ typedef struct {
     _SNK_DRM_DumbBuffer       dumb_buffer;
     __u32                     fb_id;
     void*                     data;
+    struct drm_mode_crtc      old_crtc;
 } _SNK_DRM_Data;
 
 bool SNK_DRM_open(const char* device, SNK_DRM* drm) {
@@ -203,6 +204,20 @@ bool SNK_DRM_initFB(SNK_DRM* drm) {
     } while (false);
 
     _SNK_DRM_Resources_dump(&data->resources);
+
+    do {
+        struct drm_mode_crtc current_crtc = {
+            .crtc_id = data->resources.crtc_id,
+        };
+
+        if (_SNK_DRM_ioctl(drm, DRM_IOCTL_MODE_GETCRTC, &current_crtc) == -1) {
+            printf("Failed to get current CRTC: %s\n", strerror(errno));
+
+            return false;
+        }
+
+        data->old_crtc = current_crtc;
+    } while (false);
 
     do {
         struct drm_mode_modeinfo      temp          = {};
@@ -338,6 +353,7 @@ bool SNK_DRM_refresh(const SNK_DRM* drm) {
 
     ASSERT(data->preferred_mode != nullptr);
     ASSERT(data->fb_id != 0);
+    ASSERT(data->resources.connector_id != 0);
     ASSERT(data->resources.crtc_id != 0);
 
     struct drm_mode_crtc crtc = {
@@ -400,6 +416,16 @@ void SNK_DRM_free(SNK_DRM* drm) {
             if (_SNK_DRM_ioctl(drm, DRM_IOCTL_MODE_DESTROY_DUMB, &destroy_dumb) == -1)
                 printf("Failed to destroy dumb buffer: %s\n", strerror(errno));
         }
+
+        do {
+            struct drm_mode_crtc crtc = data->old_crtc;
+
+            crtc.set_connectors_ptr = (__u64)&data->resources.connector_id;
+            crtc.count_connectors   = 1;
+
+            if (_SNK_DRM_ioctl(drm, DRM_IOCTL_MODE_SETCRTC, &crtc) == -1)
+                printf("Failed to reset CRTC: %s\n", strerror(errno));
+        } while (false);
 
         free(drm->_data);
         drm->_data = nullptr;

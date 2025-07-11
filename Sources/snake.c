@@ -257,6 +257,8 @@ void _SNK_render(const SNK_Game* game, const SNK_DRM* drm, const SNK_DRM_FBInfo 
 void SNK_snake() {
     SNK_DRM drm;
 
+    SNK_switchConsoleTo("/dev/ttyAMA0");
+    
     if (!SNK_DRM_open("/dev/dri/card0", &drm)) {
         printf("Failed to open DRM device: %s\n", strerror(errno));
 
@@ -313,4 +315,5 @@ void SNK_snake() {
 cleanup:
     SNK_Keyboard_free(&keyboard);
     SNK_DRM_free(&drm);
+    SNK_switchConsoleTo("/dev/tty0");
 }

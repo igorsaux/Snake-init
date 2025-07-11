@@ -324,7 +324,7 @@ void SNK_shell() {
         if (strncmp(buf, "snake", 5) == 0) {
             SNK_snake();
 
-            return;
+            continue;
         }
 
         if (strncmp(buf, "help", 4) == 0) {

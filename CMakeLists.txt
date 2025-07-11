@@ -3,8 +3,8 @@ cmake_minimum_required(VERSION 3.31)
 project(init LANGUAGES C)
 
 include_directories(SYSTEM
-        ../include/
-        ../linux/tools/include/nolibc
+        ${SDK}/include/
+        ${SDK}/linux/tools/include/nolibc
 )
 
 add_executable(init

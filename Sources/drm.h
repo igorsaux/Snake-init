@@ -15,6 +15,8 @@ bool SNK_DRM_initFB(SNK_DRM* drm);
 
 bool SNK_DRM_refresh(const SNK_DRM* drm);
 
+void SNK_DRM_resetFB(const SNK_DRM* drm);
+
 typedef struct {
     size_t    width;
     size_t    height;

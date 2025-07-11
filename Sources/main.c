@@ -20,20 +20,6 @@ void _SNK_mountFS() {
         SNK_crash("Failed to mount /tmp: %s", strerror(errno));
 }
 
-void _SNK_switchConsoleTo(const char* path) {
-    ASSERT(path != nullptr);
-
-    printf("Switching console to '%s'\n", path);
-
-    SNK_VT vt = SNK_VT_init();
-
-    if (!SNK_VT_open(&vt, path))
-        SNK_crash("Failed to open '%s': %s", path, strerror(errno));
-
-    SNK_VT_setConsoleTo(&vt);
-    SNK_VT_close(&vt);
-}
-
 int main() {
     printf("-- Starting SnakeOS --\n");
 
